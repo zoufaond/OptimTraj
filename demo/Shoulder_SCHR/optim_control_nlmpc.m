@@ -1,9 +1,9 @@
-function xd = optim_control(x, u)
+function xd = optim_control_nlmpc(x, u)
 m = 1.0;
 l = 10.0;
 g = 9.81;
-c1 = 1;
-c2 = 1;
+c1 = 10;
+c2 = 10;
 k1 = 0;
 k2 = 0;
 F1 = u(1);
