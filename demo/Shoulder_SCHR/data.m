@@ -1,0 +1,13 @@
+c = 0;
+x0 = [0,2.8,0,0]*0;
+ms = 1;
+mh = 1;
+Is = 2000;
+Ih = 2000;
+GHsx = 0.075;
+GHsy = 0.0028;
+GHhx = 0;
+GHhy = 0.1;
+g = 9.80665;
+koef = [ms mh Is Ih g c];
+coords = [GHsx GHsy GHhx GHhy];

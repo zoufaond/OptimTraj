@@ -1,15 +1,16 @@
-syms l m g c1 c2 k1 k2 F1 F2 qq1 qq2 uu1 uu2 ddq1 ddq2 t real
+syms ms mh g c Is Ih GHsx GHsy GHhx GHhy qq1 qq2 uu1 uu2 ddq1 ddq2 t real
 
 q = [qq1 qq2 uu1 uu2];
 q_ID = [qq1 qq2 uu1 uu2 ddq1 ddq2];
-koef = [l m g c1 c2 k1 k2];
-forces = [F1 F2];
+koef = [ms mh Is Ih g c];
+coords = [GHsx GHsy GHhx GHhy];
 
-mm = [1 0 0 0; 0 1 0 0; 0 0 l.^2.*m/4 + m.*(l.^2.*cos(qq2) + 5*l.^2/4) m.*(l.^2.*cos(qq2)/2 + l.^2/4); 0 0 m.*(l.^2.*cos(qq2)/2 + l.^2/4) l.^2.*m/4];
-fo = [uu1; uu2; F1 - c1.*uu1 - g.*l.*m.*(-sin(qq1).*sin(qq2) + cos(qq1).*cos(qq2))/2 - 3*g.*l.*m.*cos(qq1)/2 - k1.*qq1 - l.^2.*m.*uu1.^2.*sin(qq2)/2 + l.^2.*m.*(uu1 + uu2).^2.*sin(qq2)/2; F2 - c2.*uu2 - g.*l.*m.*(-sin(qq1).*sin(qq2) + cos(qq1).*cos(qq2))/2 - k2.*qq2 - l.^2.*m.*uu1.^2.*sin(qq2)/2];
+mm = [1 0 0 0; 0 1 0 0; 0 0 Ih + Is + mh.*(GHhx.^2 - GHhx.*(GHsx.*cos(qq2) + GHsy.*sin(qq2)) + GHhy.^2 + GHhy.*(GHsx.*sin(qq2) - GHsy.*cos(qq2)) + GHsx.^2 + GHsx.*(-GHhx.*cos(qq2) + GHhy.*sin(qq2)) + GHsy.^2 - GHsy.*(GHhx.*sin(qq2) + GHhy.*cos(qq2))) Ih + mh.*(GHhx.^2 + GHhy.^2 + GHsx.*(-GHhx.*cos(qq2) + GHhy.*sin(qq2)) - GHsy.*(GHhx.*sin(qq2) + GHhy.*cos(qq2))); 0 0 Ih + mh.*(GHhx.^2 - GHhx.*(GHsx.*cos(qq2) + GHsy.*sin(qq2)) + GHhy.^2 + GHhy.*(GHsx.*sin(qq2) - GHsy.*cos(qq2))) Ih + mh.*(GHhx.^2 + GHhy.^2)];
+fo = [uu1; uu2; GHhx.*g.*mh.*(-sin(qq1).*sin(qq2) + cos(qq1).*cos(qq2)) - GHhx.*mh.*(uu1 + uu2).^2.*(GHsx.*sin(qq2) - GHsy.*cos(qq2)) - GHhy.*g.*mh.*(sin(qq1).*cos(qq2) + sin(qq2).*cos(qq1)) - GHhy.*mh.*(uu1 + uu2).^2.*(GHsx.*cos(qq2) + GHsy.*sin(qq2)) - GHsx.*g.*mh.*cos(qq1) + GHsx.*mh.*uu1.^2.*(GHhx.*sin(qq2) + GHhy.*cos(qq2)) + GHsy.*g.*mh.*sin(qq1) + GHsy.*mh.*uu1.^2.*(-GHhx.*cos(qq2) + GHhy.*sin(qq2)) - c.*uu1; GHhx.*g.*mh.*(-sin(qq1).*sin(qq2) + cos(qq1).*cos(qq2)) - GHhy.*g.*mh.*(sin(qq1).*cos(qq2) + sin(qq2).*cos(qq1)) + GHsx.*mh.*uu1.^2.*(GHhx.*sin(qq2) + GHhy.*cos(qq2)) + GHsy.*mh.*uu1.^2.*(-GHhx.*cos(qq2) + GHhy.*sin(qq2)) - c.*uu2];
 
 dq = mm\fo;
 torque = mm(3:end,3:end)*[ddq1;ddq2]-fo(3:end);
 
-matlabFunction(dq,'file','ODE_sim','vars',{t,q',forces',koef})
-matlabFunction(torque,'file','Inverse_dyn','vars',{t,q_ID',forces,koef})
+
+matlabFunction(dq,'file','ODE_sim','vars',{t,q',koef,coords})
+matlabFunction(torque,'file','Inverse_dyn','vars',{t,q_ID',koef,coords})
