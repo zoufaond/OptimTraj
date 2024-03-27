@@ -16,18 +16,20 @@ end
 % sin_q1 = [(sin(linspace(0,pi,p)-pi/2)'+1)/2-pi/2];
 % sin_q2 = [(sin(linspace(0,2*pi,p)-pi/2)'+1)/6];
 % % sin_q2 = linspace(0,1,p)'.^2;
-scale = 1.5;
-traj = [(sin(linspace(0,pi,p_hor)-pi/2)'+1)/scale+x0(1)+x0(2)];
+scale = 1.1;
+% traj = [(sin(linspace(0,pi,p_hor)-pi/2)'+1)/scale+x0(1)+x0(2)];
+traj = zeros(p_hor,1);
 % nlobj.Weights.ManipulatedVariablesRate = [0,0];
 
 nlobj.PredictionHorizon = p_hor;
 nlobj.ControlHorizon = c_hor;
 nlobj.Model.StateFcn = "optim_control_nlmpc";
-nlobj.Optimization.CustomCostFcn = @(X,U,e,data) 1*sum(sum(U(1:p_hor,:).^2)) +(sum((X(10:p_hor,1)-0).^2)+sum((X(10:p_hor,2)-0.3).^2))*100; %+sum((X(1:p_hor,1)+X(1:p_hor,2)-traj).^2)%+sum(reaction_angle(X(2:p_hor,1:4)',U(2:p_hor,1:2)',e,data).^2)*1e-8
+% +(sum((X(10:p_hor,1)-0).^2)+sum((X(10:p_hor,2)-0.3).^2))*100
+nlobj.Optimization.CustomCostFcn = @(X,U,e,data) 1*sum(sum(U(1:p_hor,:).^2))+sum((X(1:p_hor,1)+X(1:p_hor,2)-traj).^2)*10 ; %+sum(reaction_angle(X(2:p_hor,1:4)',U(2:p_hor,1:2)',e,data).^2)*1e-8
 nlobj.Optimization.ReplaceStandardCost = true;
 % nlobj.Optimization.CustomEqConFcn = @(X,U,data) [(X(1:p_hor,1)+X(1:p_hor,2)-traj)]; %X(end,1)+X(end,2)-pi/2  U(1,:)' - [0;0;0] [X(1:p,1)-sin_time;X(1:p,2)-0.3]
 % nlobj.Optimization.CustomIneqConFcn = @(X,U,data) reaction_angle(X(10,1:4),U(10,1:2))-40*pi/180;
-% nlobj.Optimization.CustomEqConFcn = @(X,U,data) [reaction_angle(X(25,1:4)',U(25,1:2)',data);reaction_angle(X(20,1:4)',U(20,1:2)',data)];
+nlobj.Optimization.CustomIneqConFcn = @(X,U,e,data) [phi_react(X(1:p_hor,1:4),U(1:p_hor,1:2),data)-30]; %phi_react(X(50:70,1:4),U(50:70,1:2),data)-50
 % 
 
 initialConditions = x0;
@@ -40,8 +42,8 @@ validateFcns(nlobj,x0,u0);
 % % figure
 % % subplot(3,1,1)
 figure
-plot(info.Topt,info.Xopt(:,1),'red',info.Topt,info.Xopt(:,2),'blue',info.Topt,info.Xopt(:,2)+info.Xopt(:,1),'blue',info.Topt,[(sin(linspace(0,pi,length(info.Topt)-1)-pi/2)'+1)/scale+x0(1)+x0(2);0],'o')
-legend('1','2')
+plot(info.Topt,info.Xopt(:,1),'red',info.Topt,info.Xopt(:,2),'blue',info.Topt,info.Xopt(:,2)+info.Xopt(:,1),'green',info.Topt,[(sin(linspace(0,pi,length(info.Topt)-1)-pi/2)'+1)/scale+x0(1)+x0(2);0],'o')
+legend('1','2','1+2','prescribed')
 % 
 % % plot(info.Topt,info.Xopt(:,3),'red',info.Topt,info.Xopt(:,4),'blue')
 % % subplot(3,1,3)

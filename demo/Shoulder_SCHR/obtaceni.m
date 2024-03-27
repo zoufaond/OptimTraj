@@ -1,16 +1,23 @@
 clear all
 centre = [0,0,0];
 side = [0,0,1];
-attach = [-10,1,0];
+orig = [-2,2,0];
+insert = [2,3,0];
 radius = 1;
 x_cyl = [1,0,0];
 
-pos1 = wrap_point_thesis(attach, centre, side, radius)
-pos2 = wrap_point_moje(attach, centre, side, radius)
-x_ax = att_frame(attach, centre, side);
-arccos = acos(dot(x_cyl,x_ax));
-artan2 = atan2(x_ax(2),x_ax(1));
-vectoangle = vecangle360(x_cyl,x_ax,side);
+pos1 = wrap_point_thesis(orig, centre, side, radius);
+pos2 = wrap_point_moje(insert, centre, side, radius);
+x_ax = att_frame([pos1(1),pos1(2),0], centre, side);
+% arccos = acos(dot(x_cyl,x_ax));
+artan2 = atan2(x_ax(2),x_ax(1))*180/pi
+% vectoangle = vecangle360(x_cyl,x_ax,side);
+figure;
+hold on
+plot (orig(1),orig(2),'x',pos1(1),pos1(2),'o');
+plot (insert(1),insert(2),'x',pos2(1),pos2(2),'o');
+circle(centre,radius);
+daspect([1,1,1])
 
 
 
@@ -35,7 +42,7 @@ function pos = wrap_point_moje(attach, centre, side,radius)
     base = norm(attach-centre);
     angle = vecangle360(x_cyl,attach_f,side);
     alfa = acos(radius/base);
-    y = -sin(alfa)*radius;
+    y = sin(alfa)*radius;
     x = sqrt(radius^2-y^2);
     pos = R_z(angle)*[x;y;1];
     % pos = [x,y,1];
@@ -69,4 +76,15 @@ function rot_phiz = R_z(phiz)
     rot_phiz = [cos(phiz),-sin(phiz),0;
                 sin(phiz), cos(phiz),0;
                 0           ,0      ,1];
+end
+
+function h = circle(pos,r)
+hold on
+x = pos(1);
+y = pos(2);
+th = 0:pi/50:2*pi;
+xunit = r * cos(th) + x;
+yunit = r * sin(th) + y;
+h = plot(xunit, yunit);
+hold off
 end

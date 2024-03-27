@@ -15,10 +15,10 @@ koef = [ms mh Is Ih g c];
 coords = [GHsx GHsy GHhx GHhy];
 origin = [1,2];
 insertion = [3,3];
-O_pos = [-0.01,0.05;0,-0.03];
+O_pos = [-0.01,0.02;0,-0.03];
 I_pos = [0.02,0.1;0,0.08];
-l0m = [0.105,0.9,0.115,0.1];
-force = [700,100,600,200]*(-1);
+l0m = [0.105,0.08,0.115,0.1];
+force = [700,300,600,200]*(-1);
 
 R = reactions(x(1),x(3),0,x(2),x(4),0,GHsx,GHsy,GHhx,GHhy,g,mh,origin,insertion, O_pos, I_pos,l0m,force,akt);
 phi = atan(R(2)/R(1))*180/pi;
