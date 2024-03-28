@@ -16,9 +16,9 @@ end
 % sin_q1 = [(sin(linspace(0,pi,p)-pi/2)'+1)/2-pi/2];
 % sin_q2 = [(sin(linspace(0,2*pi,p)-pi/2)'+1)/6];
 % % sin_q2 = linspace(0,1,p)'.^2;
-scale = 1.1;
-% traj = [(sin(linspace(0,pi,p_hor)-pi/2)'+1)/scale+x0(1)+x0(2)];
-traj = zeros(p_hor,1);
+scale = 1.0;
+traj = [(sin(linspace(0,pi,p_hor)-pi/2)'+1)/scale+x0(1)+x0(2)];
+% traj = zeros(p_hor,1);
 % nlobj.Weights.ManipulatedVariablesRate = [0,0];
 
 nlobj.PredictionHorizon = p_hor;
@@ -29,7 +29,7 @@ nlobj.Optimization.CustomCostFcn = @(X,U,e,data) 1*sum(sum(U(1:p_hor,:).^2))+sum
 nlobj.Optimization.ReplaceStandardCost = true;
 % nlobj.Optimization.CustomEqConFcn = @(X,U,data) [(X(1:p_hor,1)+X(1:p_hor,2)-traj)]; %X(end,1)+X(end,2)-pi/2  U(1,:)' - [0;0;0] [X(1:p,1)-sin_time;X(1:p,2)-0.3]
 % nlobj.Optimization.CustomIneqConFcn = @(X,U,data) reaction_angle(X(10,1:4),U(10,1:2))-40*pi/180;
-nlobj.Optimization.CustomIneqConFcn = @(X,U,e,data) [phi_react(X(1:p_hor,1:4),U(1:p_hor,1:2),data)-30]; %phi_react(X(50:70,1:4),U(50:70,1:2),data)-50
+% nlobj.Optimization.CustomIneqConFcn = @(X,U,e,data) [phi_react(X(1:p_hor,1:4),U(1:p_hor,1:2),data)-30]; %phi_react(X(50:70,1:4),U(50:70,1:2),data)-50
 % 
 
 initialConditions = x0;

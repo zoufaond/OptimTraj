@@ -1,16 +1,14 @@
 clear all
-centre = [0,0,0];
-side = [0,0,1];
-orig = [-2,2,0];
-insert = [2,3,0];
+centre = [1,2,0];
+orig = [-0.5,3,0];
+insert = [2,0,0];
 radius = 1;
-x_cyl = [1,0,0];
 
-pos1 = wrap_point_thesis(orig, centre, side, radius);
-pos2 = wrap_point_moje(insert, centre, side, radius);
-x_ax = att_frame([pos1(1),pos1(2),0], centre, side);
-% arccos = acos(dot(x_cyl,x_ax));
-artan2 = atan2(x_ax(2),x_ax(1))*180/pi
+pos1 = wrap_point(orig, centre, radius,-1);
+pos2 = wrap_point(insert, centre, radius,1);
+angle = wrap_angle(orig,insert,centre,radius)*180/pi
+length = muscle_length_wrap(orig,insert,centre,radius)
+
 % vectoangle = vecangle360(x_cyl,x_ax,side);
 figure;
 hold on
@@ -19,34 +17,34 @@ plot (insert(1),insert(2),'x',pos2(1),pos2(2),'o');
 circle(centre,radius);
 daspect([1,1,1])
 
+function len = muscle_length_wrap(origin,insertion,centre,radius)
+    wrap_len = wrap_angle(origin,insertion,centre,radius)*radius;
+    I_pos = wrap_point(insertion,centre,radius,1);
+    O_pos = wrap_point(origin,centre,radius,-1);
+    O_len = vec_dist(O_pos,origin);
+    I_len = vec_dist(I_pos,insertion);
+    len = wrap_len+O_len+I_len;
+end
 
+function len = vec_dist(O,I)
+    len = sqrt((O(1) - I(1))^2 + (O(2) - I(2))^2);
+end
 
-% function [x,y] = point_in_cylinder(attach, centre, side,radius)
-% 
-% end
-function pos = wrap_point_thesis(attach, centre, side,radius)
-    % vychazi stejne, ale asi lepsi
-    x_cyl = [1,0,0];
+function angle = wrap_angle(origin,insertion,centre,radius)
+    O_pos = wrap_point(origin,centre,radius,-1);
+    I_pos = wrap_point(insertion,centre,radius,1);
+    angle =  atan2(O_pos(2)-centre(2),O_pos(1)-centre(1))-atan2(I_pos(2)-centre(2),I_pos(1)-centre(1));
+end
+
+function pos = wrap_point(attach,centre,radius,direction)
+    side = [0,0,1]+centre;
     attach_f = att_frame(attach, centre, side);
     base = norm(attach-centre);
     x = radius^2/base;
-    y = -sqrt(radius^2-x^2);
+    y = direction*sqrt(radius^2-x^2);
     % angle = vecangle360(x_cyl,attach_f,side);
     angle = atan2(attach_f(2),attach_f(1));
-    pos = R_z(angle)*[x;y;1];
-end
-
-function pos = wrap_point_moje(attach, centre, side,radius)
-    x_cyl = [1,0,0];
-    attach_f = att_frame(attach, centre, side);
-    base = norm(attach-centre);
-    angle = vecangle360(x_cyl,attach_f,side);
-    alfa = acos(radius/base);
-    y = sin(alfa)*radius;
-    x = sqrt(radius^2-y^2);
-    pos = R_z(angle)*[x;y;1];
-    % pos = [x,y,1];
-
+    pos = T_x(centre(1))*T_y(centre(2))*R_z(angle)*[x;y;1];
 end
 
 function a = vecangle360(v1,v2,n)
@@ -76,6 +74,10 @@ function rot_phiz = R_z(phiz)
     rot_phiz = [cos(phiz),-sin(phiz),0;
                 sin(phiz), cos(phiz),0;
                 0           ,0      ,1];
+end
+
+function r = position(x,y)
+    r = [x;y;1];
 end
 
 function h = circle(pos,r)
