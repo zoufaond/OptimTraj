@@ -23,8 +23,10 @@ function [length,dir] = muscle_length(origin, insertion, O_pos, I_pos, x1,x2)
         I = T_x(GHsx)*T_y(GHsy)*R_z(x2)*T_x(-GHhx)*T_y(-GHhy)*position(I_pos(1),I_pos(2));
         length = sqrt((O(1) - I(1))^2 + (O(2) - I(2))^2);
      elseif origin==2 && insertion==4
+        centre = [GHsx,GHsy,1];
+        radius = 0.05;
         O = position(O_pos(1),O_pos(2));
-        I = T_x(GHsx)*T_y(GHsy)*R_z(x2)*T_x(-GHhx)*T_y(-GHhy)*position(I_pos(1),I_pos(2));
+        I = wrap_point(O',centre,radius,-1);
         length = sqrt((O(1) - I(1))^2 + (O(2) - I(2))^2);
     end
     
