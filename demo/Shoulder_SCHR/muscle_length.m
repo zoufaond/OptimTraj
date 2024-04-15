@@ -1,30 +1,30 @@
-function length = muscle_length(origin, insertion, O_pos, I_pos, q, obtaceni)
+function [length,dir] = muscle_length(origin, insertion, O_pos, I_pos, q, obtaceni)
     GHsx = 0.075;
     GHsy = 0.0028;
     GHhx = 0;
     GHhy = 0.1;
-    if strcmp(origin, 'Thorax') && strcmp(insertion, 'Scapula') && obtaceni==0
+    if strcmp(origin, 'Thorax') & strcmp(insertion, 'Scapula') & obtaceni==0 | origin==1 & insertion==2 & obtaceni==0
         O = R_z(-q(1))*position(O_pos(1),O_pos(2));
         I = position(I_pos(1),I_pos(2));
         length = sqrt((O(1) - I(1))^2 + (O(2) - I(2))^2);
         O_dir = O;
         I_dir = I;
         length_dir = length;
-    elseif strcmp(origin, 'Thorax') && strcmp(insertion, 'Humerus') && obtaceni==0
+    elseif strcmp(origin, 'Thorax') & strcmp(insertion, 'Humerus') & obtaceni==0 | origin==1 & insertion==3 & obtaceni==0
         O = R_z(-q(1))*position(O_pos(1),O_pos(2));
         I = T_x(GHsx)*T_y(GHsy)*R_z(q(2))*T_x(-GHhx)*T_y(-GHhy)*position(I_pos(1),I_pos(2));
         length = sqrt((O(1) - I(1))^2 + (O(2) - I(2))^2);
         O_dir = O;
         I_dir = I;
         length_dir = length;
-    elseif strcmp(origin, 'Scapula') && strcmp(insertion, 'Humerus') && obtaceni==0
+    elseif strcmp(origin, 'Scapula') & strcmp(insertion, 'Humerus') & obtaceni==0 | origin==2 & insertion==3 & obtaceni==0
         O = position(O_pos(1),O_pos(2));
         I = T_x(GHsx)*T_y(GHsy)*R_z(q(2))*T_x(-GHhx)*T_y(-GHhy)*position(I_pos(1),I_pos(2));
         length = sqrt((O(1) - I(1))^2 + (O(2) - I(2))^2);
         O_dir = O;
         I_dir = I;
         length_dir = length;
-    elseif strcmp(origin, 'Scapula') && strcmp(insertion, 'Humerus') && obtaceni==1
+    elseif strcmp(origin, 'Scapula') & strcmp(insertion, 'Humerus') & obtaceni==1 | origin==2 & insertion==3 & obtaceni==1
         O = position(O_pos(1),O_pos(2));
         I = T_x(GHsx)*T_y(GHsy)*R_z(q(2))*T_x(-GHhx)*T_y(-GHhy)*position(I_pos(1),I_pos(2));
         centre = [GHsx,GHsy,1];
@@ -34,7 +34,7 @@ function length = muscle_length(origin, insertion, O_pos, I_pos, q, obtaceni)
         I_dir = wrap_point(O',centre,radius,-1);
         length_dir = sqrt((O_dir(1) - I_dir(1))^2 + (O_dir(2) - I_dir(2))^2);
     end
-    % dir = (I_dir-O_dir)/length_dir;
+    dir = (I_dir-O_dir)/length_dir;
     
 
 end
