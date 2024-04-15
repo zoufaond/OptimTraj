@@ -1,4 +1,6 @@
+mus(1).origin = 1;
+mus(1).insertion = 2;
+mus(2).origin = 3;
+mus(2).insertion = 4;
 
-for i=1:2:3
-    i
-end
+mus(2).origin
