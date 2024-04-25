@@ -1,20 +1,20 @@
 function dx = optim_control_nlmpc(x,u)
 
 akt = u';
-c = 1;
-ms = 0.5;
-mh = 2;
-Is = 0.02;
-Ih = 0.02;
-GHsx = 0.075;
-GHsy = 0.0028;
-GHhx = 0;
-GHhy = 0.1;
-g = 9.80665;
-koef = [ms mh Is Ih g c];
-coords = [GHsx GHsy GHhx GHhy];
-l0m = [0.105,0.9,0.115,0.1];
-force = [700,100,400,200]*(-1);
+params.c = 2;
+params.ms = 2;
+params.mh = 5;
+params.Is = 0.02;
+params.Ih = 0.02;
+params.GHsx = 0.075;
+params.GHsy = 0.0028;
+params.GHhx = 0;
+params.GHhy = 0.1;
+params.g = 9.80665;
+koef = [params.ms params.mh params.Is params.Ih params.g params.c];
+coords = [params.GHsx params.GHsy params.GHhx params. GHhy];
+force = [450.0;700.0;400.0;700.0;600.0;800.0;300.0;600.1]'*(-1);
+l0m = [0.11;0.11;0.08;0.165;0.14;0.14;0.13;0.12]';
 t = 0;
 
 dx = zeros(4,1);
