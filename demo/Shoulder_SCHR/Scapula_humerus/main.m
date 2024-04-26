@@ -5,9 +5,9 @@ nx = 4;
 ny = 4;
 nu = 8;
 nlobj = nlmpc(nx,ny,nu);
-Ts = 0.03;
-p_hor = 100;
-c_hor = 100;
+Ts = 0.04;
+p_hor = 50;
+c_hor = 50;
 nlobj.Ts = Ts;
 for i=1:8
 nlobj.MV(i).Min = 0;
@@ -33,9 +33,9 @@ nlobj.Model.StateFcn = "optim_control_nlmpc";
 nlobj.Optimization.CustomCostFcn = @(X,U,e,data) 1*sum(sum(U(1:p_hor,:).^2))+sum((X(1:p_hor,1)+X(1:p_hor,2)-traj).^2)*10; %
 nlobj.Optimization.ReplaceStandardCost = true;
 nlobj.Optimization.SolverOptions.Display = "iter-detailed";
-phi_timespan = 1:p_hor;
-phi_bound = 8;
-nlobj.Optimization.CustomIneqConFcn = @(X,U,e,data) [phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound;-phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound]; %phi_react(X(50:70,1:4),U(50:70,1:2),data)-50
+% phi_timespan = 1:p_hor;
+% phi_bound = 8;
+% nlobj.Optimization.CustomIneqConFcn = @(X,U,e,data) [phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound;-phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound]; %phi_react(X(50:70,1:4),U(50:70,1:2),data)-50
 % nlobj.Optimization.CustomEqConFcn = @(X,U,data) X(end,1)+X(end,2)-140/180*pi;
 
 initialConditions = x0;
@@ -51,11 +51,11 @@ figure
 plot(info.Topt,info.MVopt(:,1),'red',info.Topt,info.MVopt(:,2),'blue',info.Topt,info.MVopt(:,3),'green',info.Topt,info.MVopt(:,4),'black',info.Topt,info.MVopt(:,5),'yellow',info.Topt,info.MVopt(:,6),'cyan',info.Topt,info.MVopt(:,7),'magenta',info.Topt,info.MVopt(:,8),'-')
 legend('Supraspin','DEL','TerMin','Trap1','Trap2','Trap3','Levator','Rhomb')
 
-figure
-plot(out.tout,out.react_ang.signals.values)
-legend('Reaction Angle')
+% figure
+% plot(out.tout,out.react_ang.signals.values)
+% legend('Reaction Angle')
 
-pre_end = 4;
+pre_end = 1;
 inputData1 = timeseries(info.MVopt(1:end-pre_end,1),info.Topt(1:end-pre_end));
 save("inputData1.mat","inputData1","-v7.3");
 inputData2 = timeseries(info.MVopt(1:end-pre_end,2),info.Topt(1:end-pre_end));
