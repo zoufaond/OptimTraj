@@ -3,24 +3,28 @@ clear all
 parameters;
 nx = 6;
 ny = 6;
-nu = 9;
+nu = 13;
 nlobj = nlmpc(nx,ny,nu);
 Ts = 0.04;
 p_hor = 50;
 c_hor = 50;
 nlobj.Ts = Ts;
-for i=1:9
+for i=1:13
 nlobj.MV(i).Min = 0;
 nlobj.MV(i).Max = 1;
 end
-% nlobj.MV(7).Min = 0;
-% nlobj.MV(7).Max = 0.01;
-% nlobj.MV(8).Min = 0;
-% nlobj.MV(8).Max = 0.01;
+
+for i=10:12
+nlobj.MV(i).Min = 0;
+nlobj.MV(i).Max = 0.001;
+end
+nlobj.States(1).Max = 0*pi/180;
+nlobj.States(2).Max = 0*pi/180;
+
 % sin_q1 = [(sin(linspace(0,pi,p)-pi/2)'+1)/2-pi/2];
 % sin_q2 = [(sin(linspace(0,2*pi,p)-pi/2)'+1)/6];
 % % sin_q2 = linspace(0,1,p)'.^2;
-scale = 1.0;
+scale = 1.2;
 traj = -[(sin(linspace(0,pi,p_hor)-pi/2)'+1)*scale+x0(1)+x0(2)]; %+x0(1)+x0(2)
 % traj1 = zeros(p_hor/2,1);
 % traj = [traj1;traj2];
@@ -33,13 +37,14 @@ nlobj.Model.StateFcn = "optim_control_nlmpc";
 nlobj.Optimization.CustomCostFcn = @(X,U,e,data) 1*sum(sum(U(1:p_hor,:).^2))+sum((X(1:p_hor,1)+X(1:p_hor,2)+X(1:p_hor,3)-traj).^2)*10; %
 nlobj.Optimization.ReplaceStandardCost = true;
 nlobj.Optimization.SolverOptions.Display = "iter-detailed";
+nlobj.Optimization.SolverOptions.MaxIterations = 500;
 % phi_timespan = 1:p_hor;
 % phi_bound = 8;
 % nlobj.Optimization.CustomIneqConFcn = @(X,U,e,data) [phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound;-phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound]; %phi_react(X(50:70,1:4),U(50:70,1:2),data)-50
 % nlobj.Optimization.CustomEqConFcn = @(X,U,data) X(end,1)+X(end,2)-140/180*pi;
 
 initialConditions = x0;
-u0 = [0;0;0;0;0;0;0;0;0];
+u0 = [0;0;0;0;0;0;0;0;0;0;0;0;0];
 validateFcns(nlobj,x0,u0);
 [~,~,info] = nlmpcmove(nlobj,x0,u0);
 
@@ -48,8 +53,12 @@ plot(info.Topt,info.Xopt(:,1)*180/pi,'red',info.Topt,info.Xopt(:,2)*180/pi,'blue
 legend('1','2','3','1+2+3','prescribed')
 
 figure
-plot(info.Topt,info.MVopt(:,1),'red',info.Topt,info.MVopt(:,2),'blue',info.Topt,info.MVopt(:,3),'green',info.Topt,info.MVopt(:,4),'black',info.Topt,info.MVopt(:,5),'yellow',info.Topt,info.MVopt(:,6),'cyan',info.Topt,info.MVopt(:,7),'magenta',info.Topt,info.MVopt(:,8),'-',info.Topt,info.MVopt(:,9),'*')
-legend('Supraspin','DEL','TerMin','Trap1','Trap2','Trap3','Trap4','Levator','Rhomb')
+plot(info.Topt,info.MVopt(:,1),'red',info.Topt,info.MVopt(:,2),'blue',info.Topt,info.MVopt(:,3),'green',info.Topt,info.MVopt(:,4),'black',info.Topt,info.MVopt(:,5),'yellow',info.Topt,info.MVopt(:,6),'cyan')
+legend('Supraspin','DEL','TerMin','Trap1','Trap2','Trap3')
+
+figure
+plot(info.Topt,info.MVopt(:,7),'red',info.Topt,info.MVopt(:,8),'blue',info.Topt,info.MVopt(:,9),'green',info.Topt,info.MVopt(:,10),'black',info.Topt,info.MVopt(:,11),'yellow',info.Topt,info.MVopt(:,12),'cyan',info.Topt,info.MVopt(:,12),'magenta')
+legend('Trap4','levator','Rhomb','PECM1','PECM2','PECM3','Serr')
 
 % figure
 % plot(out.tout,out.react_ang.signals.values)
@@ -73,5 +82,13 @@ save("inputData1.mat","inputData1","-v7.3");
 inputData8 = timeseries(info.MVopt(1:end-pre_end,8),info.Topt(1:end-pre_end));
 save("inputData1.mat","inputData1","-v7.3");
 inputData9 = timeseries(info.MVopt(1:end-pre_end,9),info.Topt(1:end-pre_end));
+save("inputData1.mat","inputData1","-v7.3");
+inputData10 = timeseries(info.MVopt(1:end-pre_end,10),info.Topt(1:end-pre_end));
+save("inputData1.mat","inputData1","-v7.3");
+inputData11 = timeseries(info.MVopt(1:end-pre_end,11),info.Topt(1:end-pre_end));
+save("inputData1.mat","inputData1","-v7.3");
+inputData12 = timeseries(info.MVopt(1:end-pre_end,12),info.Topt(1:end-pre_end));
+save("inputData1.mat","inputData1","-v7.3");
+inputData13 = timeseries(info.MVopt(1:end-pre_end,13),info.Topt(1:end-pre_end));
 save("inputData1.mat","inputData1","-v7.3");
 reference_trajectory = timeseries([traj(1:end-pre_end+1)],info.Topt(1:end-pre_end));

@@ -34,6 +34,13 @@ function [length,dir] = muscle_length(origin, insertion, O_pos, I_pos, q, obtace
         O_dir = O;
         I_dir = I;
         length_dir = length;
+    elseif strcmp(origin, 'Clavicula') & strcmp(insertion, 'Humerus') & obtaceni==0 | origin==2 & insertion==4 & obtaceni==0
+        O = R_x(-q(2))*T_x(-SC_AC(1))*T_y(-SC_AC(2))*T_z(-SC_AC(3))*position(O_pos(1),O_pos(2),O_pos(3));
+        I = T_x(AC_GH(1))*T_y(AC_GH(2))*T_z(AC_GH(3))*R_x(q(3))*position(I_pos(1),I_pos(2),I_pos(3));
+        length = sqrt((O(1) - I(1))^2 + (O(2) - I(2))^2 + (O(3) - I(3))^2);
+        O_dir = O;
+        I_dir = I;
+        length_dir = length;
     elseif strcmp(origin, 'Scapula') & strcmp(insertion, 'Humerus') & obtaceni==1 | origin==3 & insertion==4 & obtaceni==1
         O = position(O_pos(1),O_pos(2),O_pos(3));
         I = T_x(AC_GH(1))*T_y(AC_GH(2))*T_z(AC_GH(3))*R_x(q(3))*position(I_pos(1),I_pos(2),I_pos(3));
