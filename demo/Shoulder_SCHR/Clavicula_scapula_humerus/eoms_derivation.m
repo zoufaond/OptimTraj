@@ -11,9 +11,9 @@ muscles.insertion = coords2arr(table2array(muscles_tab(:,7)));
 muscles.wrapping = table2array(muscles_tab(:,8));
 % N_muscles = length(muscles.F0M);
 syms  ms mh mc g c Ic Is Ih qq1 qq2 qq3 uu1 uu2 uu3 SC_ACx SC_ACy SC_ACz c_COMx c_COMy c_COMz AC_GHx AC_GHy AC_GHz s_COMx s_COMy s_COMz h_COMx h_COMy h_COMz t real
-F_iso = sym('F_iso',[1 13]);
-l0m = sym('l0m', [1 13]);
-akt_sym = sym('akt_sym',[1 13]);
+F_iso = sym('F_iso',[1 15]);
+l0m = sym('l0m', [1 15]);
+akt_sym = sym('akt_sym',[1 15]);
 % data_sym = sym('data_sym');
 q = [qq1 qq2 qq3 uu1 uu2 uu3];
 % q_ID = [qq1 qq2 uu1 uu2 ddq1 ddq2];
@@ -24,7 +24,7 @@ AC_GH = [AC_GHx AC_GHy AC_GHz];
 s_COM = [s_COMx s_COMy s_COMz];
 h_COM = [h_COMx h_COMy h_COMz];
 parameters;
-for i=1:13
+for i=1:15
     [muscle_len_vec(i),dir_vec(i,:)] = muscle_length(muscles.origin_body(i),muscles.insertion_body(i),muscles.origin(i,:),muscles.insertion(i,:),[qq1,qq2,qq3],muscles.wrapping(i),data);
     muscle_force_vec(i) = muscle_force(muscle_len_vec(i),F_iso(i), akt_sym(i), l0m(i));
 end
