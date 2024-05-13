@@ -38,10 +38,10 @@ nlobj.Optimization.SolverOptions.Display = "iter-detailed";
 % phi_bound = 15;
 % nlobj.Optimization.CustomIneqConFcn = @(X,U,e,data) [phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound;-phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound]; %phi_react(X(50:70,1:4),U(50:70,1:2),data)-50
 
-initialConditions = x0;
-u0 = [0;0;0;0;0;0;0;0];
-validateFcns(nlobj,x0,u0);
-[~,~,info] = nlmpcmove(nlobj,x0,u0);
+% initialConditions = x0;
+% u0 = [0;0;0;0;0;0;0;0];
+% validateFcns(nlobj,x0,u0);
+% [~,~,info] = nlmpcmove(nlobj,x0,u0);
 
 figure
 plot(info.Topt,info.Xopt(:,1)*180/pi,'red',info.Topt,info.Xopt(:,2)*180/pi,'blue',info.Topt,(info.Xopt(:,2)+info.Xopt(:,1))*180/pi,'green',info.Topt,[traj;0]*180/pi,'o')
