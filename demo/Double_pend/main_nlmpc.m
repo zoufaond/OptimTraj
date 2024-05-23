@@ -22,18 +22,18 @@ sin_q2 = [(sin(linspace(0,2*pi,p)-pi/2)'+1)/6];
 traj = [sin_q1,sin_q2];
 nlobj.Weights.ManipulatedVariablesRate = [0,0];
 
-nlobj.PredictionHorizon = p;
-nlobj.ControlHorizon = c;
-nlobj.Model.StateFcn = "optim_control_nlmpc";
-nlobj.Optimization.CustomCostFcn = @(X,U,e,data) sum(sum(U(1:p,:).^2)) ; %1e8*(sum(sum(((X(1:p,1:2)-traj).^2))))+sum(sum(U(1:p,:).^2))
-nlobj.Optimization.ReplaceStandardCost = true;
-nlobj.Optimization.CustomEqConFcn = @(X,U,data) [X(end,:)'-[pi/2,0,0,0]';X(ceil(end/2),2)-0]; %U(1,:)' - [0;0;0] [X(1:p,1)-sin_time;X(1:p,2)-0.3]
-
-x0 = [-pi/2;0;0;0];
-initialConditions = x0;
-u0 = [0;0];
-validateFcns(nlobj,x0,u0);
-[~,~,info] = nlmpcmove(nlobj,x0,u0);
+% nlobj.PredictionHorizon = p;
+% nlobj.ControlHorizon = c;
+% nlobj.Model.StateFcn = "optim_control_nlmpc";
+% nlobj.Optimization.CustomCostFcn = @(X,U,e,data) sum(sum(U(1:p,:).^2)) ; %1e8*(sum(sum(((X(1:p,1:2)-traj).^2))))+sum(sum(U(1:p,:).^2))
+% nlobj.Optimization.ReplaceStandardCost = true;
+% nlobj.Optimization.CustomEqConFcn = @(X,U,data) [X(end,:)'-[pi/2,0,0,0]';X(ceil(end/2),2)-0]; %U(1,:)' - [0;0;0] [X(1:p,1)-sin_time;X(1:p,2)-0.3]
+% 
+% x0 = [-pi/2;0;0;0];
+% initialConditions = x0;
+% u0 = [0;0];
+% validateFcns(nlobj,x0,u0);
+% [~,~,info] = nlmpcmove(nlobj,x0,u0);
 
 addpath ../../
 
