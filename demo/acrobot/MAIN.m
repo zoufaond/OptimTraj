@@ -138,33 +138,33 @@ problem.guess.control = [0, 0, 0, 0];
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 %                           Solve!                                        %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-
-soln = optimTraj(problem);
-
-% Interpolate the solution on a uniform grid for plotting and animation:
-tGrid = soln(end).grid.time;
-t = linspace(tGrid(1),tGrid(end),100);
-z = soln(end).interp.state(t);
-u = soln(end).interp.control(t);
-
-
-%% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-%                     Plot the solution                                   %
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-
-%HINT:  type help animate to figure out how to use the keyboard to interact
-%with the animation (slow motion, pause, jump forward / backward...)
-
-% Animate the results:
-A.plotFunc = @(t,z)( drawAcrobot(t,z,dyn) );
-A.speed = 0.25;
-A.figNum = 101;
-animate(t,z,A)
-
-% Plot the results:
-figure(1337); clf; plotAcrobot(t,z,u,dyn);
-
-% Draw a stop-action animation:
-figure(1338); clf; drawStopActionAcrobot(soln(end),dyn);
-
-
+% 
+% soln = optimTraj(problem);
+% 
+% % Interpolate the solution on a uniform grid for plotting and animation:
+% tGrid = soln(end).grid.time;
+% t = linspace(tGrid(1),tGrid(end),100);
+% z = soln(end).interp.state(t);
+% u = soln(end).interp.control(t);
+% 
+% 
+% %% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+% %                     Plot the solution                                   %
+% %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+% 
+% %HINT:  type help animate to figure out how to use the keyboard to interact
+% %with the animation (slow motion, pause, jump forward / backward...)
+% 
+% % Animate the results:
+% A.plotFunc = @(t,z)( drawAcrobot(t,z,dyn) );
+% A.speed = 0.25;
+% A.figNum = 101;
+% animate(t,z,A)
+% 
+% % Plot the results:
+% figure(1337); clf; plotAcrobot(t,z,u,dyn);
+% 
+% % Draw a stop-action animation:
+% figure(1338); clf; drawStopActionAcrobot(soln(end),dyn);
+% 
+% 

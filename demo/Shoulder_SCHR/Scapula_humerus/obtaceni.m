@@ -6,6 +6,10 @@ insertion = [4,2,0];
 insert = I_pos(phi,insertion,[0,0,0])';
 radius = 1;
 
+for t=1:0.01:1
+    orig = [-2,2,0];
+    insertion = [3,sin(t)];
+
 length = muscle_length_wrap(orig,insert,centre,radius);
 assume(phi,'real')
 length = (length);

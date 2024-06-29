@@ -5,9 +5,9 @@ nx = 4;
 ny = 4;
 nu = 8;
 nlobj = nlmpc(nx,ny,nu);
-Ts = 0.03;
-p_hor = 80;
-c_hor = 80;
+Ts = 0.02;
+p_hor = 120;
+c_hor = 120;
 nlobj.Ts = Ts;
 for i=1:8
 nlobj.MV(i).Min = 0;
@@ -31,12 +31,17 @@ nlobj.PredictionHorizon = p_hor;
 nlobj.ControlHorizon = c_hor;
 nlobj.Model.StateFcn = "optim_control_nlmpc";
 % +(sum((X(10:p_hor,1)-0).^2)+sum((X(10:p_hor,2)-0.3).^2))*100
-nlobj.Optimization.CustomCostFcn = @(X,U,e,data) 1*sum(sum(U(1:p_hor,:).^2))+sum((X(1:p_hor,1)+X(1:p_hor,2)-traj).^2)*10; %
+phi_timespan = 1:p_hor;
+phi_bound = 15;
+nlobj.Optimization.CustomCostFcn = @(X,U,e,data) 1*sum(sum(U(1:p_hor,:).^2))+sum((X(1:p_hor,1)+X(1:p_hor,2)-traj).^2)*10+sum((phi_react(X(phi_timespan,:),U(phi_timespan,:),data)*pi/180).^2);
 nlobj.Optimization.ReplaceStandardCost = true;
 nlobj.Optimization.SolverOptions.Display = "iter-detailed";
-% phi_timespan = 1:p_hor;
-% phi_bound = 15;
-% nlobj.Optimization.CustomIneqConFcn = @(X,U,e,data) [phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound;-phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound]; %phi_react(X(50:70,1:4),U(50:70,1:2),data)-50
+nlobj.Optimization.SolverOptions.MaxIterations = 1000;
+nlobj.Optimization.SolverOptions.StepTolerance = 1e-9;
+nlobj.Optimization.SolverOptions.ConstraintTolerance = 1e-9;
+nlobj.Optimization.SolverOptions.Algorithm = "sqp";
+% nlobj.Optimization.SolverOptions.EnableFeasibilityMode = true;
+% nlobj.Optimization.CustomIneqConFcn = @(X,U,e,data) [phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound;-phi_react(X(phi_timespan,:),U(phi_timespan,:),data)-phi_bound];
 
 initialConditions = x0;
 u0 = [0;0;0;0;0;0;0;0];
@@ -58,7 +63,8 @@ ylabel('Muscle activation [-]')
 legend('Supraspin','DEL','TerMin','Trap1','Trap2','Trap3','Levator','Rhomb')
 
 figure
-plot(out.tout,out.react_ang.signals.values)
+react_angle = phi_react(info.Xopt,info.MVopt,0);
+plot(info.Topt, react_angle)
 title('Reaction force direction in GHJ')
 xlabel('Time [s]')
 ylabel('Angle [°]')
