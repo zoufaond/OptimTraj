@@ -5,9 +5,15 @@ nx = 4;
 ny = 4;
 nu = 8;
 nlobj = nlmpc(nx,ny,nu);
+<<<<<<< HEAD:demo/Shoulder_SCHR/Scapula_humerus/main.m
 Ts = 0.02;
 p_hor = 120;
 c_hor = 120;
+=======
+Ts = 0.04;
+p_hor = 50;
+c_hor = 50;
+>>>>>>> 5237ac965e92ce230a5b5ab7ca1bc903b39becdb:demo/Shoulder_SCHR/Scapula_humerus/main_nlmpc.m
 nlobj.Ts = Ts;
 for i=1:8
 nlobj.MV(i).Min = 0;
